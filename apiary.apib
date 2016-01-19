@@ -1,0 +1,272 @@
+HOST: http://api.alpha.org/
+
+--- ACS - Media ---
+
+---
+Welcome to the API documentation for Alpha Cloud Services - Media.
+---
+
+--
+Objects
+Objects represent different media entities which may be made up of multiple media items (e.g. multiple video files, or an image and video file).
+--
+
+List the media objects
+#### Parameters
+* **num** _integer_ - Number of objects to list e.g. <code>10</code>
+* **page** _integer_ - The page of objects to list e.g. <code>2</code>
+
+GET /media/objects
+< 200
+< Content-Type: application/json
+{
+    "objects": [
+        {
+            "id": 1, 
+            "title": "Why Jesus?",
+            "locale": "en_GB",
+            "description": "Nicky Gumbel talks about why Jesus?",
+            "capture_date": "2013-04-23",
+            "type": "video",
+            "ministries": [
+                {
+                    "id": 1,
+                    "label": "Alpha Classic"
+                },
+                {
+                    "id": 2,
+                    "label": "Youth Alpha"
+                }
+            ],
+            "credits": [
+                {
+                    "id": 2,
+                    "label": "Nicky Gumbel"
+                }
+            ],
+            "items": [
+                {
+                    "id": 1,
+                    "object_id": 1,
+                    "url": "http://media.alpha.org/123.mp4",
+                    "extension": "mp4",
+                    "type": "video",
+                    "kind": "SD"
+                }
+            ]
+        }
+    ], 
+    "pager": {
+        "current-page": 1, 
+        "total-items": 1, 
+        "total-pages": 1
+    }
+}
+
+__C__reate a new media object
+POST /media/objects
+> Content-Type: application/json
+{
+    "title": "Why Jesus?",
+    "locale": "en_GB",
+    "description": "Nicky Gumbel talks about why Jesus?",
+    "capture_date": "2013-04-23",
+}
+< 201
+< Content-Type: application/json
+{
+    "url": "/media/objects/2"
+}
+
+__R__ead a media object
+GET /media/objects/1
+< 200
+< Content-Type: application/json
+{
+    "object": {
+        "capture_date": "2013-04-23", 
+        "credits": [
+            {
+                "id": 2, 
+                "label": "Nicky Gumbel"
+            }
+        ], 
+        "description": "Nicky Gumbel talks about why Jesus?", 
+        "id": 1, 
+        "items": [
+            {
+                "extension": "mp4", 
+                "id": 1, 
+                "object_id": 1, 
+                "rank": 0, 
+                "url": "http://media.alpha.org/123.mp4"
+            }
+        ], 
+        "locale": "en_GB", 
+        "ministries": [
+            {
+                "id": 1, 
+                "label": "Alpha Classic"
+            }, 
+            {
+                "id": 2, 
+                "label": "Youth Alpha"
+            }
+        ], 
+        "title": "Why Jesus?", 
+        "type": "video"
+    }
+}
+
+__U__pdate a media object
+PUT /media/objects/1
+> Content-Type: application/json
+{
+    "title": "Who is Jesus?",
+}
+< 200
+< Content-Type: application/json
+{
+    "url": "/media/objects/1"
+}
+
+__D__elete a media object
+DELETE /media/objects/1
+< 204
+< Content-Type: application/json
+{ }
+
+--
+Items
+Items represent actual media files and belong to a media object.
+--
+
+List the media items
+#### Parameters
+* **num** _integer_ - Number of items to list e.g. <code>10</code>
+* **page** _integer_ - The page of items to list e.g. <code>2</code>
+
+GET /media/objects/1/items
+< 200
+< Content-Type: application/json
+{
+    "objects": [
+        {
+            "id": 1,
+            "object_id": 1,
+            "url": "http://media.alpha.org/123.mp4",
+            "extension": "mp4",
+            "type": "video",
+            "kind": "SD"
+        },
+        {
+            "id": 2,
+            "object_id": 1,
+            "url": "http://media.alpha.org/23343.png",
+            "extension": "png",
+            "type": "image",
+            "kind": "hero"
+        },
+    ], 
+    "pager": {
+        "current-page": 1, 
+        "total-items": 2, 
+        "total-pages": 1
+    }
+}
+
+__C__reate a new media item
+POST /media/objects/1/items
+> Content-Type: application/json
+{
+    "object_id": 1,
+    "url": "http://media.alpha.org/23343.png",
+    "extension": "png",
+    "type": "image",
+    "kind": "hero"
+}
+< 201
+< Content-Type: application/json
+{
+    "url": "/media/objects/1/items/2"
+}
+
+__R__ead a media item
+GET /media/objects/1/items/1
+< 200
+< Content-Type: application/json
+{
+    "object": {
+        "id": 1,
+        "extension": "png", 
+        "kind": "hero", 
+        "object_id": 1, 
+        "type": "image", 
+        "url": "http://media.alpha.org/23343.png"
+    }
+}
+
+__U__pdate a media item
+PUT /media/objects/1/items/1
+> Content-Type: application/json
+{
+    "kind": null
+}
+< 200
+< Content-Type: application/json
+{
+    "url": "/media/objects/1/items/1"
+}
+
+__D__elete a media item
+DELETE /media/objects/1/items/1
+< 204
+< Content-Type: application/json
+{ }
+
+--
+Transcoding Jobs
+Control sending files to AWS for transcoding
+--
+
+GET /media/jobs
+< 200
+< Content-Type: application/json
+{
+    "jobs": [
+        {
+            "id": 1, 
+            "source": "Why Jesus?",
+            "outputs": [],
+            "status": "",
+            "message": ""
+        }
+    ]
+}
+
+__C__reate a new transcoding job
+POST /media/jobs
+> Content-Type: application/json
+{
+    "source_id": 1,
+    "outputs": [
+        "video-sd"
+    ]
+}
+< 201
+< Content-Type: application/json
+{
+    "message": "Transcoding job created"
+    "status": "OK"
+}
++++++
+< 400
+< Content-Type: application/json
+{
+    "message": "Failed to create transcoding job",
+    "status": "FAILED"
+}
++++++
+< 403
++++++
+< 404
